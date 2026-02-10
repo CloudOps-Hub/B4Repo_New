@@ -33,3 +33,17 @@ jobs:
                 --output-dir "./delta" --ignore-whitespace -d
               echo "--- package.xml generated with added and modified metadata ---"
               cat delta/package/package.xml || echo "No package.xml generated"
+
+          - name: Run SFDX CLI Scanner
+            run: |
+                mkdir reports
+                sf code-analyzer run \
+                  -t "force-app" \
+                  --rule-selector Recommended \
+                  --output-file reports/scan-reports.html
+        
+          - name: Upload CLI Scanner HTML report
+            uses: actions/upload-artifact@v4
+            with:
+              name: cli-scan-report
+              path: reports/scan-reports.html
