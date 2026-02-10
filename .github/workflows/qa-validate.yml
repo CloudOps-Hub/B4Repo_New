@@ -19,3 +19,17 @@ jobs:
               
           - name: Setup Node.js environment
             uses: actions/setup-node@v6.2.0
+
+          - name: Install SF CLI
+            run: npm install --global @salesforce/cli
+
+          - name: Install sfdx-git-delta Plugin
+            run: echo "y" | sf plugins install sfdx-git-delta
+
+          - name: Generate the package.xml for delta files
+            run: |
+              mkdir delta
+              sf sgd source delta --to "HEAD" --from "HEAD~1" \
+                --output-dir "./delta" --ignore-whitespace -d
+              echo "--- package.xml generated with added and modified metadata ---"
+              cat delta/package/package.xml || echo "No package.xml generated"
