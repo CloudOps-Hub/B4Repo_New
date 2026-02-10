@@ -5,6 +5,8 @@ on:
     branches: 
       - develop
       - integration
+    paths: 
+      - "force-app/**"
 jobs:
     deploy:
         runs-on: ubuntu-latest
@@ -12,3 +14,5 @@ jobs:
         steps:
           - name: Checkout Repository
             uses: actions/checkout@v6.0.2
+            with:
+              fetch-depth: 0
