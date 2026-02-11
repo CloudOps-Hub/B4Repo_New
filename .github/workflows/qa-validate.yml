@@ -47,3 +47,15 @@ jobs:
             with:
               name: cli-scan-report
               path: reports/scan-reports.html
+
+          - name: Authenticate SF 
+            run: |
+                echo "${{secrets.JWT_KEY}}" > server.key
+                  
+                sf org login jwt --client-id ${{ secrets.CLIENT_ID }} --jwt-key-file server.key --username ${{ secrets.SF_USERNAME_QA }} --instance-url ${{ secrets.SandboxURL }} --alias B3QA
+            
+          - name: SF Deploy
+            run: |
+                sf project deploy start --manifest delta/package/package.xml --test-level RunLocalTests --target-org B3QA --dry-run --wait 120 --verbose   
+          
+          
