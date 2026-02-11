@@ -39,7 +39,7 @@ jobs:
                 mkdir reports
                 sf code-analyzer run \
                   -t "force-app" \
-                  --rule-selector Recommended \
+                  --rule-selector pmd --rule-selector eslint --rule-selector cpd \
                   --output-file reports/scan-reports.html
         
           - name: Upload CLI Scanner HTML report
