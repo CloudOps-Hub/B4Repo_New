@@ -56,6 +56,6 @@ jobs:
             
           - name: SF Deploy
             run: |
-                sf project deploy start --manifest delta/package/package.xml --ignore-conflicts --target-org B3QA --wait 120 --verbose   
+                sf project deploy start --manifest delta/package/package.xml --ignore-conflicts --target-org B3QA --wait 120 --verbose
           
           
