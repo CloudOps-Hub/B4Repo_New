@@ -1,7 +1,7 @@
 name: Salesforce QA Validation
 
 on:
-  pull_request:
+  push:
     branches: 
       - develop
     paths: 
@@ -54,8 +54,8 @@ jobs:
                   
                 sf org login jwt --client-id ${{ secrets.CLIENT_ID }} --jwt-key-file server.key --username ${{ secrets.SF_USERNAME_QA }} --instance-url ${{ secrets.SandboxURL }} --alias B3QA
             
-          - name: SF Validate Constructive Changes
+          - name: SF Deploy
             run: |
-                sf project deploy start --manifest delta/package/package.xml --test-level RunLocalTests --target-org B3QA --dry-run --wait 120 --verbose   
+                sf project deploy start --manifest delta/package/package.xml --target-org B3QA --wait 120 --verbose   
           
           
