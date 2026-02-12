@@ -58,7 +58,7 @@ jobs:
             run: |
                 sf project deploy start \
                   --manifest delta/package/package.xml \
-                  --pre-destructive-changes delta/destructiveChanges/destructiveChanges.xml \
+                  --post-destructive-changes delta/destructiveChanges/destructiveChanges.xml \
                   --test-level RunLocalTests --target-org B3QA --dry-run --wait 120 --verbose   
           
           
