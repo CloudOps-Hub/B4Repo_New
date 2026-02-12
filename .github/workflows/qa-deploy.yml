@@ -1,11 +1,11 @@
 name: Salesforce QA Deployment
 
 on:
-  push:
-    branches: 
-      - develop
-    paths: 
-      - "force-app/**"
+  workflow_dispatch:
+    #branches: 
+      #- develop
+    #paths: 
+      #- "force-app/**"
 jobs:
     deploy:
         runs-on: ubuntu-latest
