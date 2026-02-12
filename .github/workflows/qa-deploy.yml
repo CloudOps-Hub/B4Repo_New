@@ -54,8 +54,9 @@ jobs:
                   
                 sf org login jwt --client-id ${{ secrets.CLIENT_ID }} --jwt-key-file server.key --username ${{ secrets.SF_USERNAME_QA }} --instance-url ${{ secrets.SandboxURL }} --alias B3QA
             
-          - name: SF Deploy
-            run: |
-                sf project deploy start --manifest delta/package/package.xml --ignore-conflicts --target-org B3QA --wait 120 --verbose
-          
-          
+                - name: SF Validate Changes
+                run: |
+                    sf project deploy start \
+                      --manifest delta/package/package.xml \
+                      --post-destructive-changes delta/destructiveChanges/destructiveChanges.xml \
+                      --target-org B3QA --wait 120 --verbose 
