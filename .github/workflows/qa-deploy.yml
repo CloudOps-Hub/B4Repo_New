@@ -31,7 +31,7 @@ jobs:
               sf sgd source delta --to "HEAD" --from "HEAD~1" \
                 --output-dir "./delta" --ignore-whitespace -d
               echo "--- package.xml generated with added and modified metadata ---"
-              ls delta
+              ls -R delta
               cat delta/package/package.xml || echo "No package.xml generated"
 
           - name: Run SFDX CLI Scanner
@@ -56,6 +56,6 @@ jobs:
             
           - name: SF Deploy
             run: |
-                sf project deploy start --source-dir force-app --ignore-conflicts --target-org B3QA --wait 120 --verbose
+                sf project deploy start --manifest delta/package/package.xml --ignore-conflicts --target-org B3QA --wait 120 --verbose
           
           
