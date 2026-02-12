@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Mobile_Phone__c</fullName>
-    <deprecated>false</deprecated>
-    <label>Mobile Phone</label>
+    <fullName>Employee_Name__c</fullName>
+    <externalId>false</externalId>
+    <label>Employee Name</label>
+    <length>100</length>
     <required>false</required>
     <trackTrending>false</trackTrending>
-    <type>Phone</type>
+    <type>Text</type>
+    <unique>false</unique>
 </CustomField>
