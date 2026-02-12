@@ -1,4 +1,4 @@
-name: Salesforce QA Validation
+name: Salesforce QA Deployment
 
 on:
   push:
