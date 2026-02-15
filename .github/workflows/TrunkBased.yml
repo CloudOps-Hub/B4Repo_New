@@ -60,6 +60,7 @@ jobs:
                 --source-dir force-app \
                 --test-level NoTestRun \
                 --target-org HUH \
+                --ignore-conflicts \
                 --coverage-formatters clover
     deploy-sit:
         needs: deploy-qa
@@ -95,22 +96,23 @@ jobs:
                 --username ${{ secrets.SF_USERNAME_QA }} \
                 --instance-url https://test.salesforce.com \
                 --alias HUH
-        - name: Generate the package.xml for delta files
-          id: generate-delta-files
-          run: |
-            mkdir delta
-            sf sgd source delta --to "HEAD" --from "HEAD~1" \
-                --output "./delta" --ignore-whitespace -d -i .sgdignore
-            echo "--- package.xml generated with added and modified metadata ---"
-            cat delta/package/package.xml || echo "No package.xml generated"
-            ls delta
+         #- name: Generate the package.xml for delta files
+        #  id: generate-delta-files
+        #  run: |
+        #   mkdir delta
+        #    sf sgd source delta --to "HEAD" --from "origin/main~1" \
+        #      --output "./delta" --ignore-whitespace -d -i .sgdignore
+        #   echo "--- package.xml generated with added and modified metadata ---"
+        #    cat delta/package/package.xml || echo "No package.xml generated"
+        #   ls delta
         - name: Deploy components to Salesforce
           id: deploy-pull-request-components
           run: |
             sf project deploy start \
-                --manifest delta/package/package.xml \
+                --source-dir force-app \
                 --test-level NoTestRun \
                 --target-org HUH \
+                --ignore-conflicts \
                 --coverage-formatters clover
     deploy-uat:
       needs: deploy-sit
@@ -146,20 +148,21 @@ jobs:
               --username ${{ secrets.SF_USERNAME_QA }} \
               --instance-url https://test.salesforce.com \
               --alias HUH
-      - name: Generate the package.xml for delta files
-        id: generate-delta-files
-        run: |
-          mkdir delta
-          sf sgd source delta --to "HEAD" --from "HEAD~1" \
-              --output "./delta" --ignore-whitespace -d -i .sgdignore
-          echo "--- package.xml generated with added and modified metadata ---"
-          cat delta/package/package.xml || echo "No package.xml generated"
-          ls delta
+        #- name: Generate the package.xml for delta files
+        #  id: generate-delta-files
+        #  run: |
+        #   mkdir delta
+        #    sf sgd source delta --to "HEAD" --from "origin/main~1" \
+        #      --output "./delta" --ignore-whitespace -d -i .sgdignore
+        #   echo "--- package.xml generated with added and modified metadata ---"
+        #    cat delta/package/package.xml || echo "No package.xml generated"
+        #   ls delta
       - name: Deploy components to Salesforce
         id: deploy-pull-request-components
         run: |
           sf project deploy start \
-              --manifest delta/package/package.xml \
-              --test-level NoTestRun \
-              --target-org HUH \
-              --coverage-formatters clover
+            --source-dir force-app \
+            --test-level NoTestRun \
+            --target-org HUH \
+            --ignore-conflicts \
+            --coverage-formatters clover
