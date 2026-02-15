@@ -43,7 +43,7 @@ jobs:
             sf org login jwt \
                 --client-id ${{ secrets.CLIENT_ID }} \
                 --jwt-key-file assets/server.key \
-                --username ${{ secrets.SF_USERNAME_UAT }} \
+                --username ${{ secrets.SF_USERNAME_QA }} \
                 --instance-url https://login.salesforce.com \
                 --alias HUH
         - name: Generate the package.xml for delta files
@@ -94,7 +94,7 @@ jobs:
             sf org login jwt \
                 --client-id ${{ secrets.CLIENT_ID }} \
                 --jwt-key-file assets/server.key \
-                --username ${{ secrets.SF_USERNAME_UAT }} \
+                --username ${{ secrets.SF_USERNAME_QA }} \
                 --instance-url https://login.salesforce.com \
                 --alias HUH
         - name: Generate the package.xml for delta files
@@ -145,8 +145,8 @@ jobs:
           sf org login jwt \
               --client-id ${{ secrets.CLIENT_ID }} \
               --jwt-key-file assets/server.key \
-              --username ${{ secrets.SF_USERNAME_UAT }} \
-              --instance-url https://login.salesforce.com \
+              --username ${{ secrets.SF_USERNAME_QA }} \
+              --instance-url https://test.salesforce.com \
               --alias HUH
       - name: Generate the package.xml for delta files
         id: generate-delta-files
