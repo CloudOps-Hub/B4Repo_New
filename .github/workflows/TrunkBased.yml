@@ -90,11 +90,11 @@ jobs:
             
             sf org login jwt \
                 --client-id ${{ secrets.CLIENT_ID }} \
-                --jwt-key-file assets/server.key \
+                --jwt-key-file server.key \
                 --username ${{ secrets.SF_USERNAME_QA }} \
                 --instance-url https://test.salesforce.com \
                 --alias HUH
-         #- name: Generate the package.xml for delta files
+        #- name: Generate the package.xml for delta files
         #  id: generate-delta-files
         #  run: |
         #   mkdir delta
@@ -140,7 +140,7 @@ jobs:
           
           sf org login jwt \
               --client-id ${{ secrets.CLIENT_ID }} \
-              --jwt-key-file assets/server.key \
+              --jwt-key-file server.key \
               --username ${{ secrets.SF_USERNAME_QA }} \
               --instance-url https://test.salesforce.com \
               --alias HUH
