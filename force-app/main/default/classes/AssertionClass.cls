@@ -10,4 +10,4 @@ public class AssertionClass {
         system.debug('result is' +result); 
     }
 
-}//test
+}//Test
