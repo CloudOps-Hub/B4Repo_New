@@ -44,7 +44,7 @@ jobs:
                 --client-id ${{ secrets.CLIENT_ID }} \
                 --jwt-key-file assets/server.key \
                 --username ${{ secrets.SF_USERNAME_QA }} \
-                --instance-url https://login.salesforce.com \
+                --instance-url https://test.salesforce.com \
                 --alias HUH
         - name: Generate the package.xml for delta files
           id: generate-delta-files
@@ -95,7 +95,7 @@ jobs:
                 --client-id ${{ secrets.CLIENT_ID }} \
                 --jwt-key-file assets/server.key \
                 --username ${{ secrets.SF_USERNAME_QA }} \
-                --instance-url https://login.salesforce.com \
+                --instance-url https://test.salesforce.com \
                 --alias HUH
         - name: Generate the package.xml for delta files
           id: generate-delta-files
