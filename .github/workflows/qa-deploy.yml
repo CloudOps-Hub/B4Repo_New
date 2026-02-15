@@ -1,4 +1,4 @@
-name: Salesforce QA Validation
+name: Salesforce QA Deployment
 
 on:
   push:
@@ -31,7 +31,7 @@ jobs:
               sf sgd source delta --to "HEAD" --from "HEAD~1" \
                 --output-dir "./delta" --ignore-whitespace -d
               echo "--- package.xml generated with added and modified metadata ---"
-              ls delta
+              ls -R delta
               cat delta/package/package.xml || echo "No package.xml generated"
 
           - name: Run SFDX CLI Scanner
@@ -54,8 +54,9 @@ jobs:
                   
                 sf org login jwt --client-id ${{ secrets.CLIENT_ID }} --jwt-key-file server.key --username ${{ secrets.SF_USERNAME_QA }} --instance-url ${{ secrets.SandboxURL }} --alias B3QA
             
-          - name: SF Deploy
-            run: |
-                sf project deploy start --manifest delta/package/package.xml --target-org B3QA --wait 120 --verbose   
-          
-          
+                - name: SF Validate Changes
+                run: |
+                    sf project deploy start \
+                      --manifest delta/package/package.xml \
+                      --post-destructive-changes delta/destructiveChanges/destructiveChanges.xml \
+                      --target-org B3QA --wait 120 --verbose 
