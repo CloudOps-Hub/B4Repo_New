@@ -39,7 +39,7 @@ jobs:
           run: |
            mkdir delta
             sf sgd source delta --to "HEAD" --from "origin/main~1" \
-              --output "./delta" --ignore-whitespace -d -i .sgdignore
+              --output "./delta" --ignore-whitespace -d
            echo "--- package.xml generated with added and modified metadata ---"
             cat delta/package/package.xml || echo "No package.xml generated"
            ls delta
@@ -103,7 +103,7 @@ jobs:
           run: |
            mkdir delta
             sf sgd source delta --to "HEAD" --from "origin/main~1" \
-              --output "./delta" --ignore-whitespace -d -i .sgdignore
+              --output "./delta" --ignore-whitespace -d
            echo "--- package.xml generated with added and modified metadata ---"
             cat delta/package/package.xml || echo "No package.xml generated"
            ls delta
@@ -152,7 +152,7 @@ jobs:
         run: |
            mkdir delta
             sf sgd source delta --to "HEAD" --from "origin/main~1" \
-              --output "./delta" --ignore-whitespace -d -i .sgdignore
+              --output "./delta" --ignore-whitespace -d
            echo "--- package.xml generated with added and modified metadata ---"
             cat delta/package/package.xml || echo "No package.xml generated"
            ls delta
