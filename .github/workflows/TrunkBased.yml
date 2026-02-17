@@ -1,20 +1,10 @@
 name: Salesforce MultiOrg
 on:
-  workflow_dispatch:
-    inputs:
-        target:
-            description: "select target environment"
-            required: true
-            default: "QA"
-            type: choice
-            options:
-                - QA
-                - SIT
-                - UAT
-                - PROD
+  push: 
+    branches: 
+      -main
 jobs:
     deploy-qa:
-        if: ${{ github.event.inputs.target == 'QA' }}
         runs-on: ubuntu-latest
 
         steps:
@@ -44,15 +34,17 @@ jobs:
                 --username ${{ secrets.SF_USERNAME_QA }} \
                 --instance-url https://test.salesforce.com \
                 --alias HUH
-        #- name: Generate the package.xml for delta files
-        #  id: generate-delta-files
-        #  run: |
-        #   mkdir delta
-        #    sf sgd source delta --to "HEAD" --from "origin/main~1" \
-        #      --output "./delta" --ignore-whitespace -d -i .sgdignore
-        #   echo "--- package.xml generated with added and modified metadata ---"
-        #    cat delta/package/package.xml || echo "No package.xml generated"
-        #   ls delta
+                
+        - name: Generate the package.xml for delta files
+          id: generate-delta-files
+          run: |
+           mkdir delta
+            sf sgd source delta --to "HEAD" --from "origin/main~1" \
+              --output "./delta" --ignore-whitespace -d -i .sgdignore
+           echo "--- package.xml generated with added and modified metadata ---"
+            cat delta/package/package.xml || echo "No package.xml generated"
+           ls delta
+           
         - name: Deploy components to Salesforce
           id: deploy-pull-request-components
           run: |
@@ -62,9 +54,9 @@ jobs:
                 --target-org HUH \
                 --ignore-conflicts \
                 --coverage-formatters clover
+                
     deploy-sit:
         needs: deploy-qa
-        if: ${{ github.event.inputs.target == 'QA' }}
         runs-on: ubuntu-latest
 
         steps:
@@ -94,15 +86,17 @@ jobs:
                 --username ${{ secrets.SF_USERNAME_QA }} \
                 --instance-url https://test.salesforce.com \
                 --alias HUH
-        #- name: Generate the package.xml for delta files
-        #  id: generate-delta-files
-        #  run: |
-        #   mkdir delta
-        #    sf sgd source delta --to "HEAD" --from "origin/main~1" \
-        #      --output "./delta" --ignore-whitespace -d -i .sgdignore
-        #   echo "--- package.xml generated with added and modified metadata ---"
-        #    cat delta/package/package.xml || echo "No package.xml generated"
-        #   ls delta
+                
+        - name: Generate the package.xml for delta files
+          id: generate-delta-files
+          run: |
+           mkdir delta
+            sf sgd source delta --to "HEAD" --from "origin/main~1" \
+              --output "./delta" --ignore-whitespace -d -i .sgdignore
+           echo "--- package.xml generated with added and modified metadata ---"
+            cat delta/package/package.xml || echo "No package.xml generated"
+           ls delta
+           
         - name: Deploy components to Salesforce
           id: deploy-pull-request-components
           run: |
@@ -114,7 +108,6 @@ jobs:
                 --coverage-formatters clover
     deploy-uat:
       needs: deploy-sit
-      if: ${{ github.event.inputs.target == 'QA' }}
       runs-on: ubuntu-latest
 
       steps:
@@ -144,15 +137,15 @@ jobs:
               --username ${{ secrets.SF_USERNAME_QA }} \
               --instance-url https://test.salesforce.com \
               --alias HUH
-        #- name: Generate the package.xml for delta files
-        #  id: generate-delta-files
-        #  run: |
-        #   mkdir delta
-        #    sf sgd source delta --to "HEAD" --from "origin/main~1" \
-        #      --output "./delta" --ignore-whitespace -d -i .sgdignore
-        #   echo "--- package.xml generated with added and modified metadata ---"
-        #    cat delta/package/package.xml || echo "No package.xml generated"
-        #   ls delta
+      - name: Generate the package.xml for delta files
+        id: generate-delta-files
+        run: |
+           mkdir delta
+            sf sgd source delta --to "HEAD" --from "origin/main~1" \
+              --output "./delta" --ignore-whitespace -d -i .sgdignore
+           echo "--- package.xml generated with added and modified metadata ---"
+            cat delta/package/package.xml || echo "No package.xml generated"
+           ls delta
       - name: Deploy components to Salesforce
         id: deploy-pull-request-components
         run: |
