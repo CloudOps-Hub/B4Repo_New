@@ -3,8 +3,7 @@ public class BankAccountClass {
     Integer ac_no,ac_bal;
     String ach_name;
     Integer count;
-    //member method
-    //2.Input
+    
     public void setValues(Integer no,String name,Integer bal){
         ac_no = no;
         ach_name = name;
