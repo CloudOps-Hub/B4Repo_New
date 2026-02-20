@@ -1,8 +1,8 @@
-name: Salesforce MultiOrg
+name: Salesforce MultiOrg Validation on PR
 on:
-  push: 
+  pull_request: 
     branches: 
-      -main
+      - main
 jobs:
     deploy-qa:
         runs-on: ubuntu-latest
@@ -34,27 +34,24 @@ jobs:
                 --username ${{ secrets.SF_USERNAME_QA }} \
                 --instance-url https://test.salesforce.com \
                 --alias HUH
-                
         - name: Generate the package.xml for delta files
           id: generate-delta-files
           run: |
            mkdir delta
             sf sgd source delta --to "HEAD" --from "origin/main~1" \
-              --output "./delta" --ignore-whitespace -d -i .sgdignore
+              --output "./delta" --ignore-whitespace -d
            echo "--- package.xml generated with added and modified metadata ---"
             cat delta/package/package.xml || echo "No package.xml generated"
            ls delta
-           
         - name: Deploy components to Salesforce
           id: deploy-pull-request-components
           run: |
             sf project deploy start \
-                --source-dir force-app \
-                --test-level NoTestRun \
+                --manifest delta/package/package.xml \
+                --test-level RunLocalTests \
                 --target-org HUH \
-                --ignore-conflicts \
+                --dry-run \
                 --coverage-formatters clover
-                
     deploy-sit:
         needs: deploy-qa
         runs-on: ubuntu-latest
@@ -75,6 +72,21 @@ jobs:
 
         - name: Install sfdx-git-delta Plugin
           run: echo "y" | sf plugins install sfdx-git-delta
+
+        - name: Salesforce Code Scan
+          run: |
+            mkdir reprorts
+            sf code-analyzer run \
+              --rule-selector "pmd:(Performance, Best Practices, Security)" \
+              --rule-selector "eslint:(Performance, Best Practices, Security)" \
+              --target "force-app" \
+              --output-file reports/scan-reports.html
+              
+        - name: Upload CLI Scanner HTML report
+          uses: actions/upload-artifact@v4
+          with:
+            name: cli-scan-report
+            path: reports/scan-reports.html
           
         - name: Authenticate Salesforce Org
           run: |
@@ -86,25 +98,23 @@ jobs:
                 --username ${{ secrets.SF_USERNAME_QA }} \
                 --instance-url https://test.salesforce.com \
                 --alias HUH
-                
         - name: Generate the package.xml for delta files
           id: generate-delta-files
           run: |
            mkdir delta
             sf sgd source delta --to "HEAD" --from "origin/main~1" \
-              --output "./delta" --ignore-whitespace -d -i .sgdignore
+              --output "./delta" --ignore-whitespace -d
            echo "--- package.xml generated with added and modified metadata ---"
             cat delta/package/package.xml || echo "No package.xml generated"
            ls delta
-           
         - name: Deploy components to Salesforce
           id: deploy-pull-request-components
           run: |
             sf project deploy start \
-                --source-dir force-app \
+                --manifest delta/package/package.xml \
                 --test-level NoTestRun \
                 --target-org HUH \
-                --ignore-conflicts \
+                --dry-run \
                 --coverage-formatters clover
     deploy-uat:
       needs: deploy-sit
@@ -142,16 +152,17 @@ jobs:
         run: |
            mkdir delta
             sf sgd source delta --to "HEAD" --from "origin/main~1" \
-              --output "./delta" --ignore-whitespace -d -i .sgdignore
+              --output "./delta" --ignore-whitespace -d
            echo "--- package.xml generated with added and modified metadata ---"
             cat delta/package/package.xml || echo "No package.xml generated"
            ls delta
+           
       - name: Deploy components to Salesforce
         id: deploy-pull-request-components
         run: |
           sf project deploy start \
-            --source-dir force-app \
-            --test-level NoTestRun \
+            --manifest delta/package/package.xml \
+            --test-level RunLocalTests \
             --target-org HUH \
-            --ignore-conflicts \
+            --dry-run \
             --coverage-formatters clover
