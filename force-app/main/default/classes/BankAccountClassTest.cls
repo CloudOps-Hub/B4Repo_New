@@ -20,7 +20,7 @@ public class BankAccountClassTest {
         cust2.balance();
         cust2.withdraw(5000);
         cust2.balance();
-        cust2.getValues();
-        BankAccountClass.getCount();
-    }
-}
+        cust2.getValues();//Test
+        BankAccountClass.getCount();//Test
+    }//Test
+}//Test
